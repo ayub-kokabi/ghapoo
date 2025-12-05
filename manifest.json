@@ -1,0 +1,45 @@
+{
+  "manifest_version": 3,
+  "name": "Ghapoo",
+  "version": "1.0",
+  "description": "Original or Copy?",
+
+  "host_permissions": [
+    "https://twitter.com/*",
+    "https://x.com/*",
+    "https://nitter.net/*",
+    "https://nitter.poast.org/*",
+    "https://nitter.tiekoetter.com/*",
+    "https://nitter.privacyredirect.com/*",
+    "https://nitter.space/*",
+    "https://xcancel.com/*",
+    "https://lightbrd.com/*",
+    "https://nuku.trabun.org/*",
+    "https://nitter.catsarch.com/*"
+  ],
+  "background": {
+    "service_worker": "background/worker.js",
+    "type": "module"
+  },
+  "content_scripts": [
+    {
+      "matches": ["https://twitter.com/*", "https://x.com/*"],
+      "js": [
+        "content/namespace.js",
+        "content/constants.js",
+        "content/utils.js",
+        "content/parsers.js",
+        "content/ui.js",        
+        "content/main.js"
+      ],
+      "css": ["styles.css"],
+      "run_at": "document_idle"
+    }
+  ],
+  "icons": {
+    "16": "icons/16.png",
+    "32": "icons/32.png",
+    "48": "icons/48.png",
+    "128": "icons/128.png"
+  }
+}
