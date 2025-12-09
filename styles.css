@@ -27,8 +27,8 @@
   color: var(--ghapoo-color-text);
   font-family: Vazirmatn, TwitterChirp, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   font-size: 14px;
-  direction: rtl;
-  text-align: right;
+  direction: ltr;
+  text-align: left;
   line-height: 1.5;
   overflow: hidden;
 }
@@ -168,7 +168,12 @@ a.found-profile-link:hover .found-name {
   text-decoration: underline;
 }
 
+.found-avatar {
+  flex-shrink: 0;
+}
+
 .found-avatar img {
+  display: block;
   width: 40px;
   height: 40px;
   border-radius: 50%;
@@ -203,7 +208,7 @@ a.found-profile-link:hover .found-name {
   color: var(--ghapoo-color-subtext);
   direction: ltr;
   font-size: 14px;
-  margin-right: 4px;
+  margin-left: 4px;
   overflow: hidden;
   text-overflow: ellipsis;
 }
@@ -216,7 +221,7 @@ a.found-profile-link:hover .found-name {
 
 .found-date {
   cursor: help;
-  direction: rtl;
+  direction: ltr;
 }
 
 .found-date:hover {

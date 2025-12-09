@@ -2,19 +2,18 @@ window.Ghapoo = window.Ghapoo || {};
 
 (function (App) {
 
-  const toFa = (num) => num.toLocaleString('fa-IR');
-  const SUFFIX = "قبل از این توییت";
+  const SUFFIX = "before this tweet";
   const SEL = App.SELECTORS;
 
   App.Utils = {
-    getPersianTimeAgo: (foundDate, mainDate) => {
-      if (!(foundDate instanceof Date) || isNaN(foundDate)) return "تاریخ نامعتبر";
+    getTimeAgo: (foundDate, mainDate) => {
+      if (!(foundDate instanceof Date) || isNaN(foundDate)) return "Invalid date";
 
       const baseDate = (mainDate instanceof Date && !isNaN(mainDate)) ? mainDate : new Date();
 
       const diff = baseDate - foundDate;
 
-      if (diff < 0) return "لحظاتی پیش";
+      if (diff < 0) return "Just now";
 
       const minute = 60 * 1000;
       const hour = 60 * minute;
@@ -23,14 +22,31 @@ window.Ghapoo = window.Ghapoo || {};
       const month = 30 * day;
       const year = 365 * day;
 
-      if (diff < minute) return `لحظاتی ${SUFFIX}`;
-      if (diff < hour) return `${toFa(Math.floor(diff / minute))} دقیقه ${SUFFIX}`;
-      if (diff < day) return `${toFa(Math.floor(diff / hour))} ساعت ${SUFFIX}`;
-      if (diff < week) return `${toFa(Math.floor(diff / day))} روز ${SUFFIX}`;
-      if (diff < month) return `${toFa(Math.floor(diff / week))} هفته ${SUFFIX}`;
-      if (diff < year) return `${toFa(Math.floor(diff / month))} ماه ${SUFFIX}`;
+      if (diff < minute) return `Just ${SUFFIX}`;
+      
+      if (diff < hour) {
+        const val = Math.floor(diff / minute);
+        return `${val} minute${val > 1 ? 's' : ''} ${SUFFIX}`;
+      }
+      if (diff < day) {
+        const val = Math.floor(diff / hour);
+        return `${val} hour${val > 1 ? 's' : ''} ${SUFFIX}`;
+      }
+      if (diff < week) {
+        const val = Math.floor(diff / day);
+        return `${val} day${val > 1 ? 's' : ''} ${SUFFIX}`;
+      }
+      if (diff < month) {
+        const val = Math.floor(diff / week);
+        return `${val} week${val > 1 ? 's' : ''} ${SUFFIX}`;
+      }
+      if (diff < year) {
+        const val = Math.floor(diff / month);
+        return `${val} month${val > 1 ? 's' : ''} ${SUFFIX}`;
+      }
 
-      return `${toFa(Math.floor(diff / year))} سال ${SUFFIX}`;
+      const val = Math.floor(diff / year);
+      return `${val} year${val > 1 ? 's' : ''} ${SUFFIX}`;
     },
 
     extractTweetData: (tweetEl) => {

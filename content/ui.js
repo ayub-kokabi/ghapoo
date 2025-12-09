@@ -27,6 +27,13 @@
       </svg>`
   };
 
+  // Regex to detect if text starts with characters from:
+  // Arabic/Persian/Urdu/Kurdish/Azeri (0600-06FF, 0750-077F, 08A0-08FF, FB50-FDFF, FE70-FEFF)
+  // Hebrew (0590-05FF)
+  // Aramaic/Syriac (0700-074F)
+  // Dhivehi/Thaana (0780-07BF)
+  const RTL_REGEX = /^[\u0600-\u06FF\u0750-\u077F\u08A0-\u08FF\uFB50-\uFDFF\uFE70-\uFEFF\u0590-\u05FF\u0700-\u074F\u0780-\u07BF]/;
+
   const UI = {
     getPopover: () => {
       if (App.State.globalPopover && document.body.contains(App.State.globalPopover)) {
@@ -89,13 +96,13 @@
         popover.innerHTML = `
           <div class="ghapoo-empty-state">
             <div class="ghapoo-empty-icon">${SVGS.EMPTY}</div>
-            <div>توییتِ مشابهِ قدیمی‌تر یافت نشد.</div>
+            <div>No older similar tweets found.</div>
           </div>`;
       } else {
         popover.classList.remove('popover-compact');
         const headerDiv = document.createElement('div');
         headerDiv.className = 'ghapoo-popover-header';
-        headerDiv.textContent = 'برخی از توییت‌هایِ مشابهِ قدیمی‌تر';
+        headerDiv.textContent = 'Possible older sources';
         popover.appendChild(headerDiv);
 
         matches.forEach(m => {
@@ -146,15 +153,17 @@
           const dateSpan = document.createElement('span');
           dateSpan.className = 'found-date';
           const dateObj = new Date(m.date);
-          dateSpan.textContent = Utils.getPersianTimeAgo(dateObj, mainTweetDate);
+          dateSpan.textContent = Utils.getTimeAgo(dateObj, mainTweetDate);
           dateSpan.title = dateObj.toLocaleString('en-US', { dateStyle: 'full', timeStyle: 'medium' });
-          dateSpan.dir = 'ltr';
-
+          
           headerBottom.appendChild(dateSpan);
 
           const textDiv = document.createElement('div');
           textDiv.className = 'found-text';
-          textDiv.dir = 'auto';
+          
+          // Apply RTL only if text starts with defined RTL characters
+          textDiv.dir = RTL_REGEX.test(m.text) ? 'rtl' : 'ltr';
+          
           textDiv.textContent = m.text;
 
           contentDiv.appendChild(headerTop);
@@ -181,7 +190,7 @@
     createBaseButton: () => {
       const btn = document.createElement('div');
       btn.className = 'ghapoo-icon-base ghapoo-check-btn';
-      btn.title = 'بررسی اصالت محتوا';
+      btn.title = 'Check content originality';
       btn.innerHTML = SVGS.CHECK;
       return btn;
     },
@@ -253,7 +262,7 @@
         popover.classList.add('popover-compact');
         popover.innerHTML = `
           <div class="ghapoo-popover-message">
-            لحظاتی بعد دوباره تلاش کنید.
+            Please try again later.
           </div>`;
         
         popover.classList.add('visible');
